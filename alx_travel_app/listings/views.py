@@ -4,8 +4,11 @@ from alx_travel_app.listings.serializers import ListingSerializer, BookingSerial
 import os
 import requests
 from django.http import JsonResponse
-from .models import Payment
+from .models import Payment,Booking
 from django.views.decorators.csrf import csrf_exempt
+from .serializers import BookingSerializer
+from .tasks import send_booking_confirmation_email
+
 
 class ListingViewSet(viewsets.ModelViewSet):
     """CRUD API for Listings"""
@@ -17,6 +20,17 @@ class BookingViewSet(viewsets.ModelViewSet):
     """CRUD API for Bookings"""
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
+
+    def perform_create(self, serializer):
+        booking = serializer.save()
+        user_email = booking.user.email
+        # Trigger background email task (use Celery if available otherwise call synchronously)
+        task = getattr(send_booking_confirmation_email, "delay", None)
+        if callable(task):
+            task(user_email, booking.id)
+        else:
+            send_booking_confirmation_email(user_email, booking.id)
+
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
