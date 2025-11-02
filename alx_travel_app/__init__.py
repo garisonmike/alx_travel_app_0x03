@@ -1,0 +1,3 @@
+"""
+Django Travel App Package
+"""
