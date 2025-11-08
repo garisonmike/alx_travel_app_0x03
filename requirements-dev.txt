@@ -1,0 +1,4 @@
+# Development/test dependencies
+pytest>=7.0
+pytest-django>=4.5
+pytest-mock>=3.10

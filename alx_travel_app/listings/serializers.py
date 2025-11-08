@@ -23,9 +23,11 @@ class BookingSerializer(serializers.ModelSerializer):
     Serializer for Booking model.
     Converts a Booking object → JSON.
     """
+    ip_address = serializers.IPAddressField(read_only=True)
+    
     class Meta:
         model = Booking
-        fields = ['id', 'user', 'listing', 'start_date', 'end_date', 'created_at']
+        fields = ['id', 'user', 'listing', 'start_date', 'end_date', 'ip_address', 'created_at']
 
 
 class ReviewSerializer(serializers.ModelSerializer):

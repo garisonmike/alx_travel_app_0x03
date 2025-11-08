@@ -22,14 +22,12 @@ class BookingViewSet(viewsets.ModelViewSet):
     serializer_class = BookingSerializer
 
     def perform_create(self, serializer):
-        booking = serializer.save()
+        # Capture client IP from request
+        ip_address = getattr(self.request, 'client_ip', None)
+        booking = serializer.save(ip_address=ip_address)
         user_email = booking.user.email
-        # Trigger background email task (use Celery if available otherwise call synchronously)
-        task = getattr(send_booking_confirmation_email, "delay", None)
-        if callable(task):
-            task(user_email, booking.id)
-        else:
-            send_booking_confirmation_email(user_email, booking.id)
+        # Send booking confirmation email
+        send_booking_confirmation_email(user_email, booking.id)
 
 
 
@@ -67,11 +65,14 @@ def initiate_payment(request):
         data = response.json()
 
         if data.get("status") == "success":
+            # Capture client IP
+            ip_address = getattr(request, 'client_ip', None)
             Payment.objects.create(
                 booking_reference=booking_reference,
                 amount=amount,
                 transaction_id=data["data"]["tx_ref"],
                 status="Pending",
+                ip_address=ip_address,
             )
             return JsonResponse({
                 "checkout_url": data["data"]["checkout_url"],

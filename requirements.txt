@@ -1,6 +1,25 @@
+# Core Django
 Django>=4.2,<5.0
 djangorestframework>=3.14.0
 django-cors-headers>=4.0.0
-requests>=2.31.0
-celery>=5.2.7
 python-dotenv>=1.0.0
+
+# Task Queue & Background Jobs
+celery>=5.2.7
+kombu>=5.2.0
+
+# HTTP & API
+requests>=2.31.0
+
+# Production Server
+gunicorn>=21.2.0
+whitenoise>=6.6.0
+
+# API Documentation (Swagger)
+drf-yasg>=1.21.7
+
+# Database (PostgreSQL for production)
+psycopg2-binary>=2.9.9
+
+# Monitoring & Logging
+django-extensions>=3.2.3

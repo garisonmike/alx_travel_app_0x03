@@ -43,6 +43,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'alx_travel_app.middleware.IPTrackingMiddleware',  # IP tracking
 ]
 
 ROOT_URLCONF = 'alx_travel_app.urls'

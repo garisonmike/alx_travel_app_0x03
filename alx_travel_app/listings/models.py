@@ -35,6 +35,7 @@ class Booking(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bookings")
     start_date = models.DateField()
     end_date = models.DateField()
+    ip_address = models.GenericIPAddressField(blank=True, null=True, help_text="Client IP address")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -61,6 +62,7 @@ class Payment(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     chapa_tx_ref = models.CharField(max_length=200, blank=True, null=True)
     status = models.CharField(max_length=20, default="Pending")
+    ip_address = models.GenericIPAddressField(blank=True, null=True, help_text="Client IP address")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
