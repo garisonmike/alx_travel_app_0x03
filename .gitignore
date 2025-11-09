@@ -46,3 +46,8 @@ Thumbs.db
 # Environment
 .env
 .env.local
+.env.render
+.env.production
+.env.*
+!.env.example
+

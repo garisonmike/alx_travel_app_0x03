@@ -5,10 +5,11 @@ from alx_travel_app.middleware import get_client_ip, IPTrackingMiddleware
 class TestIPTracking(SimpleTestCase):
     """Test IP address tracking middleware and utility functions."""
     
-    def setup_method(self):
-        self.factory = RequestFactory()
     def setUp(self):
+        """Set up test fixtures."""
         self.factory = RequestFactory()
+    
+    def test_get_client_ip_from_x_forwarded_for(self):
         """Test IP extraction from X-Forwarded-For header (proxy scenario)."""
         request = self.factory.get('/')
         request.META['HTTP_X_FORWARDED_FOR'] = '203.0.113.195, 70.41.3.18, 150.172.238.178'
