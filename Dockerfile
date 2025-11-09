@@ -61,6 +61,8 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:8000/admin/login/ || exit 1
 
-# Default command - Run Celery worker in background, then start Gunicorn
-CMD celery -A alx_travel_app worker --loglevel=info --detach && \
+# Default command - Run migrations, create superuser, start Celery worker, then Gunicorn
+CMD python manage.py migrate --no-input && \
+    python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@example.com', 'admin123')" && \
+    celery -A alx_travel_app worker --loglevel=info --detach && \
     gunicorn alx_travel_app.wsgi:application --bind 0.0.0.0:$PORT --workers 3 --threads 2 --timeout 60
