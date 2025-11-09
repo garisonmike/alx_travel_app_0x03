@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from .models import Listing, Booking
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 User = get_user_model()
 
@@ -19,6 +19,9 @@ class BookingIntegrationTest(TestCase):
     @patch('alx_travel_app.listings.views.send_booking_confirmation_email')
     def test_create_booking_triggers_task(self, mock_send_email):
         """Test that creating a booking through the API triggers the email task"""
+        # Mock the task to return immediately (not delay)
+        mock_send_email.return_value = MagicMock()
+        
         # Log in the user
         self.client.force_login(self.user)
 
@@ -35,6 +38,7 @@ class BookingIntegrationTest(TestCase):
         # Ensure a booking exists
         booking = Booking.objects.filter(user=self.user, listing=self.listing).first()
         self.assertIsNotNone(booking, "Booking was not created")
+        assert booking is not None
 
         # Ensure the task was called
         self.assertTrue(mock_send_email.called, "Email task was not called")
