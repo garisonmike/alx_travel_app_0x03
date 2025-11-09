@@ -20,6 +20,7 @@ drf-yasg>=1.21.7
 
 # Database (PostgreSQL for production)
 psycopg2-binary>=2.9.9
+dj-database-url>=2.1.0
 
 # Monitoring & Logging
 django-extensions>=3.2.3
