@@ -61,5 +61,6 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:8000/admin/login/ || exit 1
 
-# Default command (can be overridden in docker-compose)
-CMD ["gunicorn", "alx_travel_app.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--threads", "2", "--timeout", "60"]
+# Default command - Run Celery worker in background, then start Gunicorn
+CMD celery -A alx_travel_app worker --loglevel=info --detach && \
+    gunicorn alx_travel_app.wsgi:application --bind 0.0.0.0:$PORT --workers 3 --threads 2 --timeout 60
